@@ -14,7 +14,7 @@ Install the required Python packages using `pip install -r requirements.txt`.
 ### Basic Syntax
 
 ```bash
-python csv-hasher.py input_path output_path col_to_hash [-a ALGORITHM] [-l LENGTH]
+python csv-hasher.py input_path output_path col_to_hash [-a ALGORITHM] [-l LENGTH] [-s SALT]
 ```
 
 ### Parameters
@@ -24,28 +24,34 @@ python csv-hasher.py input_path output_path col_to_hash [-a ALGORITHM] [-l LENGT
 - `col_to_hash`: The name of the column to hash.
 - `-a` or `--algorithm`: Optional. Hash algorithm to use. Default is `sha224`.
 - `-l` or `--length`: Optional. Length to truncate the hash.
+- `-s` or `--salt`: Optional. Salt to add to the hash.
 
 
 ### Examples
 
-1. Hash column 'id' using default SHA224 algorithm.
+1. Hash column 'email' using default SHA224 algorithm.
 ```bash
-python csv-hasher.py input.csv output.csv id
+python csv-hasher.py input.csv output.csv email
 ```
 
-2. Hash column 'id' using SHA256 algorithm.
+2. Hash column 'email' using SHA256 algorithm.
 ```bash
-python csv-hasher.py input.csv output.csv id -a sha256
+python csv-hasher.py input.csv output.csv email -a sha256
 ```
 
-3. Hash and truncate the column 'id' to 50 characters.
+3. Hash and truncate the column 'email' to 50 characters.
 ```bash
-python csv-hasher.py input.csv output.csv id -l 50
+python csv-hasher.py input.csv output.csv email -l 50
 ```
 
 4. Use SHA256 and truncate to 50 characters.
 ```bash
-python csv-hasher.py input.csv output.csv id -a sha256 -l 50
+python csv-hasher.py input.csv output.csv email -a sha256 -l 50
+```
+
+5. Hash column 'email' using SHA256 algorithm and salt 'my_salt'.
+```bash
+python csv-hasher.py input.csv output.csv email -a sha256 -s my_salt
 ```
 
 ## Output

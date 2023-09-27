@@ -2,12 +2,12 @@ import argparse
 import hashlib
 import pandas as pd
 
-def get_hash(input_str, algorithm):
+def get_hash(input_str, algorithm, salt=""):
     hasher = hashlib.new(algorithm)
-    hasher.update(input_str.encode('utf-8'))
+    hasher.update((salt + input_str).encode('utf-8'))
     return hasher.hexdigest()
 
-def main(input_path, output_path, col_to_hash, algorithm, truncate_length):
+def main(input_path, output_path, col_to_hash, algorithm, truncate_length, salt):
     df = pd.read_csv(input_path)
 
     if col_to_hash not in df.columns:
@@ -15,7 +15,7 @@ def main(input_path, output_path, col_to_hash, algorithm, truncate_length):
         return
 
     # Full hash
-    df[f"{col_to_hash}_hash_full"] = df[col_to_hash].apply(lambda x: get_hash(str(x), algorithm))
+    df[f"{col_to_hash}_hash_full"] = df[col_to_hash].apply(lambda x: get_hash(str(x), algorithm, salt))
 
     # Optional truncation
     if truncate_length:
@@ -47,6 +47,7 @@ if __name__ == "__main__":
     parser.add_argument("col_to_hash", help="Name of the column to hash.")
     parser.add_argument("-a", "--algorithm", default="sha224", help="Hash algorithm to use. Default is 'sha224'.")
     parser.add_argument("-l", "--length", type=int, help="Length to truncate the hash. Optional.")
+    parser.add_argument("-s", "--salt", default="", help="Optional salt for the hash.")
     args = parser.parse_args()
-    
-    main(args.input_path, args.output_path, args.col_to_hash, args.algorithm, args.length)
+
+    main(args.input_path, args.output_path, args.col_to_hash, args.algorithm, args.length, args.salt)
