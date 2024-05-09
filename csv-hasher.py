@@ -8,7 +8,7 @@ def get_hash(input_str, algorithm, salt=""):
     return hasher.hexdigest()
 
 def main(input_path, output_path, col_to_hash, algorithm, truncate_length, salt):
-    df = pd.read_csv(input_path)
+    df = pd.read_csv(input_path, encoding='unicode_escape')
 
     if col_to_hash not in df.columns:
         print(f"Column '{col_to_hash}' not found.")
@@ -20,6 +20,8 @@ def main(input_path, output_path, col_to_hash, algorithm, truncate_length, salt)
     # Optional truncation
     if truncate_length:
         df[f"{col_to_hash}_hash_truncated"] = df[f"{col_to_hash}_hash_full"].apply(lambda x: x[:truncate_length])
+
+    df.pop('Email') 
 
     df.to_csv(output_path, index=False)
 
