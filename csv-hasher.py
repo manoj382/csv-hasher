@@ -22,8 +22,14 @@ def main(input_path, output_path, col_to_hash, algorithm, truncate_length, salt)
         df[f"{col_to_hash}_hash_truncated"] = df[f"{col_to_hash}_hash_full"].apply(lambda x: x[:truncate_length])
 
     df.pop('Email') 
+    df.pop('First Name') 
+    df.pop('Last Name') 
 
-    df.to_csv(output_path, index=False)
+    df_reorder = df[['Email_hash_full', 'Record ID - Contact', 'v1 Profession', 'v1 specialty all', 'v1 latest contract end date', 'Funnel Stage ID', 'job_suggestion_interested_employment_types', 'v1 employment type', 'v1 top places to work', 'Postal Code']]
+
+    df_reorder.rename(columns={'Email_hash_full': 'email_hash_full', 'Record ID - Contact': 'record_id', 'v1 Profession': 'profession', 'v1 specialty all': 'specialty', 'v1 latest contract end date': 'contract_end_date', 'Funnel Stage ID': 'funnel_stage_id', 'job_suggestion_interested_employment_types': 'employment_type_ids', 'v1 employment type': 'employment_types', 'v1 top places to work': 'top_places_to_work', 'Postal Code': 'postal_code'}, inplace=True)
+
+    df_reorder.to_csv(output_path, index=False, sep='|')
 
     # Check for hash clashes if truncation is used
     if truncate_length:
